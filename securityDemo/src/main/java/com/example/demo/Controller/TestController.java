@@ -6,7 +6,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
-public class testController {
+public class TestController {
 
     //if role is not ADMIN, 403
     @RequestMapping(value="/test", method = RequestMethod.DELETE)
