@@ -6,7 +6,7 @@
     <result column="user_email" jdbcType="VARCHAR" property="userEmail" />
     <result column="user_name" jdbcType="VARCHAR" property="userName" />
     <result column="user_pw" jdbcType="VARCHAR" property="userPw" />
-    <result column="user_role_id" jdbcType="BIGINT" property="userRoleId" />
+    <result column="user_role_name" jdbcType="VARCHAR" property="userRoleName" />
     <result column="user_auth" jdbcType="BIT" property="userAuth" />
   </resultMap>
   <delete id="deleteByPrimaryKey" parameterType="java.lang.Long">
@@ -18,7 +18,7 @@
       user_pw, user_role_id, user_auth
       )
     values (#{userEmail,jdbcType=VARCHAR}, #{userName,jdbcType=VARCHAR},
-      #{userPw,jdbcType=VARCHAR}, 2, true
+      #{userPw,jdbcType=VARCHAR}, 'ROLE_USER', true
       )
   </insert>
   <update id="updateByPrimaryKey" parameterType="com.example.demo.model.User">
@@ -31,7 +31,7 @@
     where user_id = #{userId,jdbcType=BIGINT}
   </update>
   <select id="selectByName" parameterType="java.lang.String" resultMap="BaseResultMap">
-    select user_id, user_email, user_name, user_pw, user_role_id, user_auth
+    select user_name, user_pw, user_role_name
     from public.user
     where user_name = #{userName,jdbcType=BIGINT}
   </select>

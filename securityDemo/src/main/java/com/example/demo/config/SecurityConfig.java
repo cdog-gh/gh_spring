@@ -7,6 +7,7 @@ import org.springframework.security.config.annotation.method.configuration.Enabl
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
+import org.springframework.security.config.http.SessionCreationPolicy;
 
 @EnableWebSecurity
 @Configuration
@@ -16,6 +17,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     @Autowired
     public void configureGlobal(AuthenticationManagerBuilder auth) throws Exception
     {
+        //auth.jdbcAuthentication()
         auth.inMemoryAuthentication()
                 .withUser("user")
                 .password("{noop}test")
@@ -28,11 +30,17 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
     @Override
     protected void configure(HttpSecurity http) throws Exception {
-        http.httpBasic().and().authorizeRequests()
+        http.httpBasic()
+                .and()
+                .sessionManagement()
+                .sessionCreationPolicy(SessionCreationPolicy.STATELESS)
+
                 /*
                 /test/** : 인증 되어야 함.
                 /user/** : 누구나 접속할 수 있음. (permitAll)
                  */
+                .and()
+                .authorizeRequests()
                 .antMatchers("/test/**").authenticated()
                 .antMatchers("/user/**").permitAll()
                 .and().formLogin() //form login 활성화

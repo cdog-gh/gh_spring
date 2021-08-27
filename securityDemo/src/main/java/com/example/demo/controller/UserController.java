@@ -1,7 +1,9 @@
-package com.example.demo.Controller;
+package com.example.demo.controller;
 
+import com.example.demo.model.JwtToken;
 import com.example.demo.model.User;
 import com.example.demo.service.UserService;
+import com.example.demo.util.JwtUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -16,6 +18,9 @@ public class UserController {
     @Autowired
     private UserService userService;
 
+    @Autowired
+    private JwtUtil jwtUtil;
+
     @RequestMapping(value="/user", method = RequestMethod.POST)
     public String userPost(@RequestBody User user){
         String newPw = new BCryptPasswordEncoder().encode(user.getUserPw());
@@ -25,13 +30,14 @@ public class UserController {
     }
 
     @RequestMapping(value="/user", method = RequestMethod.GET)
-    public ResponseEntity<String> userGet(@RequestBody User user) {
+    public ResponseEntity<JwtToken> userGet(@RequestBody User user) {
         BCryptPasswordEncoder encoder = new BCryptPasswordEncoder();
         User result = userService.getUser(user);
-        if(result == null)
-            return new ResponseEntity<>("auth fail", HttpStatus.UNAUTHORIZED);
-        if(encoder.matches(user.getUserPw(), result.getUserPw()))
-            return new ResponseEntity<>("match auth information", HttpStatus.OK);
-        return new ResponseEntity<>("auth fail", HttpStatus.UNAUTHORIZED);
+        JwtToken jwt = new JwtToken();
+        if((result == null)||(!encoder.matches(user.getUserPw(), result.getUserPw())))
+            return new ResponseEntity<>(jwt, HttpStatus.UNAUTHORIZED);
+        user.setUserPw("");
+        jwt.setAccessToken(jwtUtil.generateJwtToken(result));
+        return new ResponseEntity<>(jwt, HttpStatus.OK);
     }
 }

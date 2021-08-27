@@ -5,7 +5,7 @@ public class User {
     private String userEmail;
     private String userName;
     private String userPw;
-    private Long userRoleId;
+    private String userRoleName;
     private Boolean userAuth;
     public Long getUserId() {
         return userId;
@@ -31,11 +31,11 @@ public class User {
     public void setUserPw(String userPw) {
         this.userPw = userPw;
     }
-    public Long getUserRoleId() {
-        return userRoleId;
+    public String getUserRoleName() {
+        return userRoleName;
     }
-    public void setUserRoleId(Long userRoleId) {
-        this.userRoleId = userRoleId;
+    public void setUserRoleId(String userRoleName) {
+        this.userRoleName = userRoleName;
     }
     public Boolean getUserAuth() {
         return userAuth;
